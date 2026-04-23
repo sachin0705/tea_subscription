@@ -3,54 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HRMS Tea Club</title>
+    <title>HRMS Tea Club Portal</title>
     <style>
-        :root { --primary: #1a237e; --bg: #f8f9fa; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; }
+        :root { --primary: #1a237e; --accent: #ffeb3b; --bg: #f8f9fa; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 10px; }
         .container { max-width: 900px; margin: auto; }
         
-        .alert-bar { background: #fff3e0; color: #ef6c00; padding: 10px; text-align: center; font-weight: bold; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffe0b2; font-size: 13px; }
+        .alert-bar { background: #fff3e0; color: #ef6c00; padding: 12px; text-align: center; font-weight: bold; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffe0b2; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-        .header { background: var(--primary); color: white; padding: 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .header h1 { margin: 0; font-size: 20px; }
+        .header { background: var(--primary); color: white; padding: 25px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .header h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
 
-        /* Stats Row */
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .stat-card { background: white; padding: 12px; border-radius: 10px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .stat-card small { color: #666; font-size: 12px; }
-        .stat-card div { font-weight: bold; font-size: 18px; color: var(--primary); }
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .stat-card { background: white; padding: 15px; border-radius: 10px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-top: 4px solid var(--primary); }
+        .stat-card small { color: #666; text-transform: uppercase; font-size: 10px; letter-spacing: 1px; }
+        .stat-card div { font-weight: bold; font-size: 20px; color: var(--primary); margin-top: 5px; }
 
-        /* Search Bar */
-        .search-container { margin-bottom: 15px; }
-        .search-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 15px; box-sizing: border-box; outline: none; border-left: 5px solid var(--primary); }
+        .search-input { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #ddd; font-size: 16px; box-sizing: border-box; outline: none; margin-bottom: 15px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
+        .search-input:focus { border-color: var(--primary); }
 
         .grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        @media (min-width: 768px) { .grid { grid-template-columns: 1fr 2fr; } }
+        @media (min-width: 768px) { .grid { grid-template-columns: 320px 1fr; } }
 
-        .card { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: fit-content; }
-        input, button { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 6px; border: 1px solid #ddd; box-sizing: border-box; }
-        button { background: var(--primary); color: white; border: none; font-weight: bold; cursor: pointer; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); height: fit-content; }
+        h3 { margin-top: 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: var(--primary); }
+        
+        input[type="text"], button { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 6px; border: 1px solid #ddd; box-sizing: border-box; font-size: 14px; }
+        button { background: var(--primary); color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #0d144a; }
 
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; white-space: nowrap; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 400px; }
+        th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid #f1f1f1; font-size: 14px; }
+        th { color: #888; font-size: 12px; text-transform: uppercase; }
+        
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-block; }
         .badge-paid { background: #e8f5e9; color: #2e7d32; }
         .badge-pending { background: #ffebee; color: #c62828; }
-        .admin-link { display: block; text-align: center; margin-top: 20px; color: #bbb; text-decoration: none; font-size: 12px; }
+        
+        .admin-link { display: block; text-align: center; margin-top: 30px; color: #bbb; text-decoration: none; font-size: 12px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="alert-bar">📢 Notice: Please pay your monthly contribution in Cash to Admin</div>
+    <div class="alert-bar">📢 PLEASE PAY MONTHLY CONTRIBUTION IN CASH TO ADMIN</div>
 
     <div class="header">
         <div>
             <h1>HRMS Tea Club</h1>
-            <span id="currentMonth" style="font-size: 13px; opacity: 0.8;">Loading...</span>
+            <span id="currentMonth" style="font-size: 13px; color: var(--accent);">Syncing month...</span>
         </div>
         <div style="text-align: right;">
-            <small style="font-size: 11px;">Cost: <span id="monthlyCost">₹0</span></small>
+            <small style="opacity: 0.8; font-size: 11px;">Monthly Subscription</small><br>
+            <b id="monthlyCost" style="font-size: 18px;">₹0</b>
         </div>
     </div>
 
@@ -65,89 +71,81 @@
         </div>
     </div>
 
-    <div class="search-container">
-        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search by Name or Employee ID..." onkeyup="filterTable()">
-    </div>
+    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search member by name or ID..." onkeyup="filterTable()">
 
     <div class="grid">
         <div class="card">
-            <h3 style="margin-top:0; font-size: 16px;">New Entry / Renew</h3>
+            <h3>New Registration</h3>
             <form id="subForm">
                 <input type="text" name="empId" placeholder="Employee ID" required>
                 <input type="text" name="empName" placeholder="Full Name" required>
                 <input type="hidden" name="action" value="ADD">
-                <button type="submit" id="subBtn">Submit</button>
+                <button type="submit" id="subBtn">Submit Entry</button>
             </form>
-            <div id="msg" style="text-align:center; font-size: 13px;"></div>
+            <div id="msg" style="text-align:center; font-size: 13px; margin-top: 5px;"></div>
         </div>
 
         <div class="card">
-            <h3 style="margin-top:0; font-size: 16px;">Member Status</h3>
-            <div style="overflow-x:auto;">
+            <h3>Subscription Status</h3>
+            <div class="table-container">
                 <table id="statusTable">
-                    <thead><tr><th>Name</th><th>ID</th><th>Status</th></tr></thead>
-                    <tbody id="memberList"></tbody>
+                    <thead><tr><th>Member Name</th><th>ID</th><th>Status</th></tr></thead>
+                    <tbody id="memberList"><tr><td colspan="3">Loading records...</td></tr></tbody>
                 </table>
             </div>
         </div>
     </div>
-    <a href="admin.html" class="admin-link">Admin Login</a>
+    <a href="admin.html" class="admin-link">🔒 Admin Portal</a>
 </div>
 
 <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwkuVfwWY-vLKex498qU3DgSEj7CBqzpKsAKscYAnBlFcc31mxT2mR9lSr_srpghgw8/exec';
 
-    async function load() {
-        const res = await fetch(scriptURL);
-        const data = await res.json();
-        document.getElementById('netFunds').innerText = "₹" + data.funds;
-        document.getElementById('totalMembers').innerText = data.totalCount;
-        document.getElementById('monthlyCost').innerText = "₹" + data.cost;
-        document.getElementById('currentMonth').innerText = data.month;
-        
-        const list = document.getElementById('memberList');
-        list.innerHTML = "";
-        data.members.forEach(m => {
-            list.innerHTML += `<tr>
-                <td>${m.name}</td>
-                <td>${m.id}</td>
-                <td><span class="badge ${m.paid === 'Yes' ? 'badge-paid' : 'badge-pending'}">${m.paid === 'Yes' ? 'PAID' : 'PENDING'}</span></td>
-            </tr>`;
-        });
+    async function loadData() {
+        try {
+            const res = await fetch(scriptURL);
+            const data = await res.json();
+            document.getElementById('netFunds').innerText = "₹" + data.funds;
+            document.getElementById('totalMembers').innerText = data.totalCount;
+            document.getElementById('monthlyCost').innerText = "₹" + data.cost;
+            document.getElementById('currentMonth').innerText = data.month;
+            
+            const list = document.getElementById('memberList');
+            list.innerHTML = "";
+            data.members.forEach(m => {
+                list.innerHTML += `<tr>
+                    <td><b>${m.name}</b></td>
+                    <td>${m.id}</td>
+                    <td><span class="badge ${m.paid === 'Yes' ? 'badge-paid' : 'badge-pending'}">${m.paid === 'Yes' ? 'PAID' : 'PENDING'}</span></td>
+                </tr>`;
+            });
+        } catch (e) { 
+            document.getElementById('memberList').innerHTML = "<tr><td colspan='3'>Connection Error</td></tr>";
+        }
     }
 
     function filterTable() {
-        const input = document.getElementById("searchInput");
-        const filter = input.value.toUpperCase();
-        const table = document.getElementById("statusTable");
-        const tr = table.getElementsByTagName("tr");
-
-        for (let i = 1; i < tr.length; i++) {
-            let tdName = tr[i].getElementsByTagName("td")[0];
-            let tdId = tr[i].getElementsByTagName("td")[1];
-            if (tdName || tdId) {
-                let txtValueName = tdName.textContent || tdName.innerText;
-                let txtValueId = tdId.textContent || tdId.innerText;
-                if (txtValueName.toUpperCase().indexOf(filter) > -1 || txtValueId.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
+        const filter = document.getElementById("searchInput").value.toUpperCase();
+        const rows = document.getElementById("statusTable").getElementsByTagName("tr");
+        for (let i = 1; i < rows.length; i++) {
+            const name = rows[i].getElementsByTagName("td")[0].textContent.toUpperCase();
+            const id = rows[i].getElementsByTagName("td")[1].textContent.toUpperCase();
+            rows[i].style.display = (name.includes(filter) || id.includes(filter)) ? "" : "none";
         }
     }
 
     document.getElementById('subForm').addEventListener('submit', e => {
         e.preventDefault();
-        document.getElementById('subBtn').disabled = true;
+        const btn = document.getElementById('subBtn');
+        btn.disabled = true; btn.innerText = "Processing...";
         fetch(scriptURL, { method: 'POST', body: new FormData(e.target) })
         .then(() => { 
-            document.getElementById('msg').innerHTML = "<span style='color:green;'>Saved! Please pay cash.</span>";
-            setTimeout(() => location.reload(), 1500);
+            document.getElementById('msg').innerHTML = "<span style='color:green; font-weight:bold;'>Success! Please pay cash to Admin.</span>";
+            setTimeout(() => location.reload(), 2000);
         });
     });
 
-    window.onload = load;
+    window.onload = loadData;
 </script>
 </body>
 </html>
