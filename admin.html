@@ -2,73 +2,85 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea Club Admin</title>
     <style>
-        body { font-family: sans-serif; background: #2c3e50; margin: 0; padding: 15px; display: flex; justify-content: center; height: 100vh; box-sizing: border-box; }
-        .card { background: white; padding: 20px; border-radius: 12px; width: 100%; max-width: 350px; display: flex; flex-direction: column; }
+        body { font-family: sans-serif; background: #2c3e50; margin: 0; padding: 15px; display: flex; justify-content: center; }
+        .admin-card { background: white; color: #333; padding: 25px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .hidden { display: none; }
-        h3 { margin-top: 0; color: #1a237e; text-align: center; }
-        input { padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; width: 100%; box-sizing: border-box; font-size: 16px; }
-        button { padding: 12px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 15px; }
-        .btn-p { background: #1a237e; }
-        .btn-e { background: #c0392b; }
-        .btn-v { background: #27ae60; }
-        .row { margin-bottom: 15px; border-bottom: 1px solid #f0f0f0; }
-        label { font-size: 12px; font-weight: bold; color: #666; margin-bottom: 5px; display: block; }
+        input, button { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
+        .btn-act { background: #1a237e; color: white; border: none; font-weight: bold; cursor: pointer; }
+        .btn-red { background: #c0392b; }
+        .btn-green { background: #27ae60; }
+        .section { border-bottom: 1px solid #eee; margin-bottom: 25px; padding-bottom: 10px; }
+        label { font-weight: bold; display: block; margin-bottom: 8px; color: #555; }
     </style>
 </head>
 <body>
 
-<div id="login" class="card">
-    <h3>Admin Login</h3>
+<div id="login" class="admin-card">
+    <h2 style="text-align:center">Admin Access</h2>
     <input type="password" id="pass" placeholder="Password">
-    <button class="btn-p" onclick="doLogin()">Login</button>
+    <button class="btn-act" onclick="login()">Login</button>
 </div>
 
-<div id="dash" class="card hidden">
-    <h3>Control Panel</h3>
-    <div class="row">
-        <label>Update Price</label>
-        <input type="number" id="c" placeholder="New Cost">
-        <button class="btn-p" onclick="act('cost','c')">Update</button>
+<div id="dash" class="admin-card hidden">
+    <h2 style="color:#1a237e; margin-top:0">Admin Control</h2>
+    
+    <div class="section">
+        <label>Update Cost (₹)</label>
+        <input type="number" id="cVal" placeholder="New Monthly Price">
+        <button class="btn-act" onclick="send('cost', 'cVal')">Update Price</button>
     </div>
-    <div class="row">
-        <label>Expense</label>
-        <input type="number" id="e" placeholder="Amount">
-        <button class="btn-e" onclick="act('expense','e')">Deduct</button>
+
+    <div class="section">
+        <label>Deduct Expense (₹)</label>
+        <input type="number" id="eVal" placeholder="Amount Spent">
+        <button class="btn-act btn-red" onclick="send('expense', 'eVal')">Record Expense</button>
     </div>
-    <div class="row">
-        <label>Verify ID</label>
-        <input type="text" id="v" placeholder="Emp ID">
-        <button class="btn-v" onclick="act('verify','v')">Mark Paid</button>
+
+    <div class="section">
+        <label>Verify Paid (Emp ID)</label>
+        <input type="text" id="vVal" placeholder="Employee ID" inputmode="numeric">
+        <button class="btn-act btn-green" onclick="send('verify', 'vVal')">Mark as PAID</button>
     </div>
-    <a href="index.html" style="text-align:center; font-size: 13px; color: #999; text-decoration:none;">Exit</a>
+
+    <button onclick="location.href='index.html'" style="background:none; border:none; color:#1a237e; text-decoration: underline; cursor:pointer;">← Logout & Back</button>
 </div>
 
 <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwkuVfwWY-vLKex498qU3DgSEj7CBqzpKsAKscYAnBlFcc31mxT2mR9lSr_srpghgw8/exec';
 
-    function doLogin() {
+    function login() {
         if(document.getElementById('pass').value === "HRMS2026") {
             document.getElementById('login').classList.add('hidden');
             document.getElementById('dash').classList.remove('hidden');
-        } else alert("Error");
+        } else { alert("Wrong Password"); }
     }
 
-    function act(action, id) {
-        const val = document.getElementById(id).value;
-        if(!val) return;
-        const btn = event.target;
-        btn.disabled = true; btn.innerText = "...";
+    function send(action, inputId) {
+        const val = document.getElementById(inputId).value;
+        if(!val) return alert("Please enter a value");
         
-        const fd = new FormData();
-        fd.append('action', action);
-        fd.append('value', val);
+        const btn = event.target;
+        const originalText = btn.innerText;
+        btn.disabled = true;
+        btn.innerText = "Updating...";
 
-        fetch(scriptURL, { method: 'POST', body: fd })
-        .then(() => { alert("Saved!"); document.getElementById(id).value=""; })
-        .finally(() => { btn.disabled = false; btn.innerText = "Update"; });
+        const formData = new FormData();
+        formData.append('action', action);
+        formData.append('value', val);
+
+        fetch(scriptURL, { method: 'POST', body: formData })
+        .then(() => { 
+            alert("Record Updated!"); 
+            document.getElementById(inputId).value = ""; 
+        })
+        .catch(e => alert("Error communicating with Sheet"))
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerText = originalText;
+        });
     }
 </script>
 </body>
