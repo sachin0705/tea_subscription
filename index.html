@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HRMS Tea Club</title>
+    <title>HRMS Tea Club Dashboard</title>
     <style>
         :root { --primary: #1a237e; --bg: #f8f9fa; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
@@ -14,10 +14,12 @@
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        .admin-login { margin-top: 40px; text-align: center; border-top: 1px solid #ddd; padding-top: 20px; }
-        .admin-link { color: #999; text-decoration: none; font-size: 13px; }
-        input, button { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ddd; box-sizing: border-box; }
-        button { background: var(--primary); color: white; cursor: pointer; border: none; font-weight: bold; }
+        .badge { padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .badge-paid { background: #e8f5e9; color: #2e7d32; }
+        .badge-pending { background: #ffebee; color: #c62828; }
+        input, button { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 6px; border: 1px solid #ddd; box-sizing: border-box; }
+        button { background: var(--primary); color: white; border: none; font-weight: bold; cursor: pointer; }
+        .admin-link { display: block; text-align: center; margin-top: 30px; color: #aaa; text-decoration: none; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -26,57 +28,65 @@
     <div class="dashboard-header">
         <div>
             <h1 style="margin:0">HRMS Tea Club</h1>
-            <p>Community Vending Machine</p>
+            <p id="costDisplay">Monthly Subscription: Loading...</p>
         </div>
         <div class="fund-circle">
             <small>Net Funds</small>
-            <span id="netFunds" style="font-size: 20px; font-weight: bold;">Loading...</span>
+            <span id="netFunds" style="font-size: 20px; font-weight: bold;">₹0</span>
         </div>
     </div>
 
     <div class="grid">
         <div class="card">
-            <h3>Subscribe Now</h3>
+            <h3>Join Club</h3>
             <form id="subForm">
                 <input type="text" name="empId" placeholder="Employee ID" required>
                 <input type="text" name="empName" placeholder="Full Name" required>
                 <input type="hidden" name="action" value="ADD">
-                <button type="submit" id="subBtn">Join Club</button>
+                <button type="submit" id="subBtn">Submit Subscription</button>
             </form>
-            <p id="msg" style="font-size:12px; text-align:center; color: green;"></p>
+            <div id="msg" style="text-align:center; color:green; font-size:14px;"></div>
         </div>
 
         <div class="card">
-            <h3>Subscribers List</h3>
+            <h3>Member Status</h3>
             <table>
                 <thead><tr><th>Name</th><th>ID</th><th>Status</th></tr></thead>
-                <tbody id="memberList"><tr><td colspan="3">Data syncs with Google Sheets...</td></tr></tbody>
+                <tbody id="memberList"><tr><td colspan="3">Syncing with HRMS records...</td></tr></tbody>
             </table>
         </div>
     </div>
-
-    <div class="admin-login">
-        <a href="admin.html" class="admin-link">🔒 Admin Access</a>
-    </div>
+    <a href="admin.html" class="admin-link">Admin Login</a>
 </div>
 
 <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwkuVfwWY-vLKex498qU3DgSEj7CBqzpKsAKscYAnBlFcc31mxT2mR9lSr_srpghgw8/exec';
 
+    async function fetchData() {
+        try {
+            const res = await fetch(scriptURL);
+            const data = await res.json();
+            document.getElementById('netFunds').innerText = "₹" + data.funds;
+            document.getElementById('costDisplay').innerText = "Monthly Subscription: ₹" + data.cost;
+            
+            const list = document.getElementById('memberList');
+            list.innerHTML = "";
+            data.members.forEach(m => {
+                list.innerHTML += `<tr><td>${m.name}</td><td>${m.id}</td><td><span class="badge ${m.paid === 'Yes' ? 'badge-paid' : 'badge-pending'}">${m.paid === 'Yes' ? 'PAID' : 'PENDING'}</span></td></tr>`;
+            });
+        } catch (e) { console.error(e); }
+    }
+
     document.getElementById('subForm').addEventListener('submit', e => {
         e.preventDefault();
-        const btn = document.getElementById('subBtn');
-        btn.disabled = true;
-        btn.innerText = "Processing...";
-
-        fetch(scriptURL, { method: 'POST', body: new FormData(e.target)})
-            .then(res => {
-                document.getElementById('msg').innerText = "Success! Please pay admin ₹200.";
-                btn.innerText = "Joined";
-                e.target.reset();
-            })
-            .catch(err => alert("Error: " + err));
+        fetch(scriptURL, { method: 'POST', body: new FormData(e.target) })
+        .then(() => { 
+            document.getElementById('msg').innerText = "Successfully Joined!";
+            setTimeout(() => location.reload(), 1500);
+        });
     });
+
+    window.onload = fetchData;
 </script>
 </body>
 </html>
