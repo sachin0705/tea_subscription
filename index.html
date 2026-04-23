@@ -75,15 +75,17 @@
 
     <div class="grid">
         <div class="card">
-            <h3>New Registration</h3>
+            <h3>Join Club</h3>
             <form id="subForm">
-                <input type="text" name="empId" placeholder="Employee ID" required>
+                <input type="text" name="empId" placeholder="Employee ID" required inputmode="numeric">
                 <input type="text" name="empName" placeholder="Full Name" required>
                 <input type="hidden" name="action" value="ADD">
-                <button type="submit" id="subBtn">Submit Entry</button>
+                <button type="submit" id="subBtn">Submit Subscription</button>
             </form>
-            <div id="msg" style="text-align:center; font-size: 13px; margin-top: 5px;"></div>
+            <div id="msg" style="text-align:center; color:var(--success); font-weight: bold;"></div>
         </div>
+
+       
 
         <div class="card">
             <h3>Subscription Status</h3>
