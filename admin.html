@@ -2,85 +2,139 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tea Club Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HRMS Admin Panel</title>
     <style>
-        body { font-family: sans-serif; background: #2c3e50; margin: 0; padding: 15px; display: flex; justify-content: center; }
-        .admin-card { background: white; color: #333; padding: 25px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        :root { --primary: #1a237e; --bg: #2c3e50; --card: #ffffff; --danger: #c62828; --success: #2e7d32; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 15px; display: flex; justify-content: center; min-height: 100vh; }
+        .admin-container { width: 100%; max-width: 450px; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .hidden { display: none; }
-        input, button { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
-        .btn-act { background: #1a237e; color: white; border: none; font-weight: bold; cursor: pointer; }
-        .btn-red { background: #c0392b; }
-        .btn-green { background: #27ae60; }
-        .section { border-bottom: 1px solid #eee; margin-bottom: 25px; padding-bottom: 10px; }
-        label { font-weight: bold; display: block; margin-bottom: 8px; color: #555; }
+        
+        h2 { color: var(--primary); margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; font-size: 1.3rem; text-align: center; }
+        h3 { font-size: 1rem; color: #555; margin: 20px 0 10px 0; }
+        
+        label { font-size: 12px; font-weight: bold; color: #888; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        
+        button { width: 100%; padding: 14px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; font-size: 14px; transition: opacity 0.2s; }
+        button:active { opacity: 0.8; }
+        
+        .btn-blue { background: var(--primary); }
+        .btn-green { background: var(--success); }
+        .btn-red { background: var(--danger); }
+        
+        .section-divider { margin: 25px 0; border-top: 1px solid #eee; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: var(--primary); text-decoration: none; font-weight: bold; font-size: 14px; }
     </style>
 </head>
 <body>
 
-<div id="login" class="admin-card">
-    <h2 style="text-align:center">Admin Access</h2>
-    <input type="password" id="pass" placeholder="Password">
-    <button class="btn-act" onclick="login()">Login</button>
-</div>
-
-<div id="dash" class="admin-card hidden">
-    <h2 style="color:#1a237e; margin-top:0">Admin Control</h2>
-    
-    <div class="section">
-        <label>Update Cost (₹)</label>
-        <input type="number" id="cVal" placeholder="New Monthly Price">
-        <button class="btn-act" onclick="send('cost', 'cVal')">Update Price</button>
+<div class="admin-container">
+    <div id="loginCard" class="card">
+        <h2>Admin Access</h2>
+        <label>Password</label>
+        <input type="password" id="adminPass" placeholder="Enter Admin Password">
+        <button class="btn-blue" onclick="checkLogin()">Login to Dashboard</button>
     </div>
 
-    <div class="section">
-        <label>Deduct Expense (₹)</label>
-        <input type="number" id="eVal" placeholder="Amount Spent">
-        <button class="btn-act btn-red" onclick="send('expense', 'eVal')">Record Expense</button>
-    </div>
+    <div id="adminDash" class="card hidden">
+        <h2>HRMS Tea Club Admin</h2>
 
-    <div class="section">
-        <label>Verify Paid (Emp ID)</label>
-        <input type="text" id="vVal" placeholder="Employee ID" inputmode="numeric">
-        <button class="btn-act btn-green" onclick="send('verify', 'vVal')">Mark as PAID</button>
-    </div>
+        <div class="section">
+            <label>Verify Cash Payment</label>
+            <input type="text" id="verifyId" placeholder="Enter Employee ID">
+            <button class="btn-green" onclick="processAction('verify', 'verifyId')">Mark as PAID</button>
+        </div>
 
-    <button onclick="location.href='index.html'" style="background:none; border:none; color:#1a237e; text-decoration: underline; cursor:pointer;">← Logout & Back</button>
+        <div class="section-divider"></div>
+
+        <div class="section">
+            <label>Record New Expense</label>
+            <input type="text" id="expDesc" placeholder="Description (e.g., Milk & Sugar)">
+            <input type="number" id="expAmt" placeholder="Amount (₹)">
+            <button class="btn-red" onclick="saveExpense()">Deduct Expense</button>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="section">
+            <label>Update Monthly Subscription Cost</label>
+            <input type="number" id="newCost" placeholder="New Monthly Amount (₹)">
+            <button class="btn-blue" onclick="processAction('cost', 'newCost')">Update Price</button>
+        </div>
+
+        <a href="index.html" class="back-link">← Return to Home</a>
+    </div>
 </div>
 
 <script>
+    // Replace with your actual Web App URL from Google Apps Script
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwkuVfwWY-vLKex498qU3DgSEj7CBqzpKsAKscYAnBlFcc31mxT2mR9lSr_srpghgw8/exec';
 
-    function login() {
-        if(document.getElementById('pass').value === "HRMS2026") {
-            document.getElementById('login').classList.add('hidden');
-            document.getElementById('dash').classList.remove('hidden');
-        } else { alert("Wrong Password"); }
+    function checkLogin() {
+        const pass = document.getElementById('adminPass').value;
+        if(pass === "HRMS2026") {
+            document.getElementById('loginCard').classList.add('hidden');
+            document.getElementById('adminDash').classList.remove('hidden');
+        } else {
+            alert("Incorrect Password!");
+        }
     }
 
-    function send(action, inputId) {
+    // Handles simple one-value actions (Verify and Cost)
+    async function processAction(actionType, inputId) {
         const val = document.getElementById(inputId).value;
         if(!val) return alert("Please enter a value");
-        
+
         const btn = event.target;
         const originalText = btn.innerText;
         btn.disabled = true;
-        btn.innerText = "Updating...";
+        btn.innerText = "Processing...";
 
-        const formData = new FormData();
-        formData.append('action', action);
-        formData.append('value', val);
+        const fd = new FormData();
+        fd.append('action', actionType);
+        fd.append('value', val);
 
-        fetch(scriptURL, { method: 'POST', body: formData })
-        .then(() => { 
-            alert("Record Updated!"); 
-            document.getElementById(inputId).value = ""; 
-        })
-        .catch(e => alert("Error communicating with Sheet"))
-        .finally(() => {
+        try {
+            await fetch(scriptURL, { method: 'POST', body: fd });
+            alert("Update Successful!");
+            document.getElementById(inputId).value = "";
+        } catch (e) {
+            alert("Error updating data.");
+        } finally {
             btn.disabled = false;
             btn.innerText = originalText;
-        });
+        }
+    }
+
+    // Handles the two-value Expense action
+    async function saveExpense() {
+        const desc = document.getElementById('expDesc').value;
+        const amt = document.getElementById('expAmt').value;
+
+        if(!desc || !amt) return alert("Please fill both Description and Amount");
+
+        const btn = event.target;
+        btn.disabled = true;
+        btn.innerText = "Processing...";
+
+        const fd = new FormData();
+        fd.append('action', 'expense');
+        fd.append('desc', desc);  // Expense Description
+        fd.append('value', amt);  // Expense Amount
+
+        try {
+            await fetch(scriptURL, { method: 'POST', body: fd });
+            alert("Expense recorded successfully!");
+            document.getElementById('expDesc').value = "";
+            document.getElementById('expAmt').value = "";
+        } catch (e) {
+            alert("Error saving expense.");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Deduct Expense";
+        }
     }
 </script>
 </body>
