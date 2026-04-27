@@ -9,7 +9,7 @@
         :root { 
             --primary: #1e293b; 
             --accent: #3b82f6; 
-            --bg: #f8fafc; 
+            --bg: #f1f5f9; 
             --success: #10b981; 
             --danger: #ef4444; 
             --card: #ffffff;
@@ -20,126 +20,99 @@
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg); 
-            margin: 0; 
-            padding: 0; 
+            margin: 0; padding: 0; 
             color: var(--text-main);
             line-height: 1.5;
         }
 
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; padding: 15px; }
 
         /* Notification Bar */
         .alert-bar { 
-            background: #fffbeb; 
-            color: #92400e; 
-            padding: 12px; 
-            text-align: center; 
-            font-weight: 600; 
-            border-radius: 12px; 
-            margin-bottom: 20px; 
-            font-size: 13px; 
-            border: 1px solid #fef3c7;
+            background: #fffbeb; color: #92400e; padding: 12px; 
+            text-align: center; font-weight: 600; border-radius: 12px; 
+            margin-bottom: 15px; font-size: 12px; border: 1px solid #fef3c7;
         }
 
-        /* Header Section */
+        /* Fixed Header - No Overlap */
         .header { 
             background: var(--primary); 
             color: white; 
-            padding: 30px 20px; 
-            border-radius: 20px; 
-            margin-bottom: -40px; /* Overlap effect */
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            padding: 20px; 
+            border-radius: 16px; 
+            margin-bottom: 15px; /* Added space so cards don't overlap */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        .header h1 { margin: 0; font-size: 22px; letter-spacing: -0.5px; }
-        .header p { margin: 5px 0 0; opacity: 0.7; font-size: 13px; }
+        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .header h1 { margin: 0; font-size: 20px; letter-spacing: -0.5px; }
         .month-tag { 
-            background: rgba(255,255,255,0.1); 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 11px; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            color: #fbbf24;
+            background: #fbbf24; color: #78350f; padding: 4px 10px; 
+            border-radius: 8px; font-size: 10px; font-weight: 800; 
+            text-transform: uppercase;
         }
+        .cost-label { font-size: 13px; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; margin-top: 5px; display: block; }
 
         /* Stats Grid */
         .stats-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 12px; 
-            padding: 0 10px;
-            margin-bottom: 25px;
+            display: grid; grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; margin-bottom: 20px;
         }
         .stat-card { 
-            background: var(--card); 
-            padding: 15px 10px; 
-            border-radius: 16px; 
-            text-align: center; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.02);
+            background: var(--card); padding: 12px 5px; 
+            border-radius: 12px; text-align: center; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
         }
-        .stat-card span { display: block; font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
-        .stat-card b { font-size: 16px; color: var(--primary); }
+        .stat-card span { display: block; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+        .stat-card b { font-size: 15px; color: var(--primary); }
 
-        /* Main Cards */
+        /* Buttons & Cards */
         .card { 
-            background: var(--card); 
-            padding: 24px; 
-            border-radius: 20px; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
-            margin-bottom: 20px;
-            border: 1px solid rgba(0,0,0,0.02);
+            background: var(--card); padding: 20px; 
+            border-radius: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); 
+            margin-bottom: 15px;
         }
-        .card h3 { margin: 0 0 15px 0; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .card h3 { margin: 0 0 15px 0; font-size: 15px; font-weight: 700; color: var(--primary); }
 
-        /* Inputs */
-        .input-group { display: flex; gap: 10px; margin-bottom: 12px; }
+        .input-group { display: flex; gap: 8px; margin-bottom: 10px; }
         input { 
-            flex: 1; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; 
-            font-size: 15px; transition: all 0.2s; background: #fdfdfd;
+            flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; 
+            font-size: 14px; width: 100%; box-sizing: border-box;
         }
-        input:focus { border-color: var(--accent); outline: none; background: #fff; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
         
         button { 
-            width: 100%; padding: 14px; border-radius: 12px; border: none; 
-            background: var(--accent); color: white; font-weight: 600; cursor: pointer; 
-            font-size: 15px; transition: transform 0.1s, opacity 0.2s;
+            width: 100%; padding: 12px; border-radius: 10px; border: none; 
+            background: var(--accent); color: white; font-weight: 600; 
+            cursor: pointer; font-size: 14px;
         }
-        button:active { transform: scale(0.98); }
         
-        .btn-secondary { background: #f1f5f9; color: #475569; margin-top: 10px; font-size: 13px; padding: 10px; }
+        .btn-history { background: #f8fafc; color: var(--text-muted); border: 1px solid #e2e8f0; margin-bottom: 15px; font-size: 12px; }
 
-        /* Status Table */
+        /* Table */
         .status-table { width: 100%; border-collapse: collapse; }
-        .status-table th { text-align: left; font-size: 12px; color: var(--text-muted); padding: 10px 5px; border-bottom: 1px solid #f1f5f9; }
-        .status-table td { padding: 14px 5px; border-bottom: 1px solid #f8fafc; font-size: 14px; }
-        
-        .badge { 
-            padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; 
-        }
+        .status-table td { padding: 12px 5px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; }
         .badge-paid { background: #dcfce7; color: #166534; }
         .badge-pending { background: #fee2e2; color: #991b1b; }
 
         /* Modal */
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
-        .modal-content { background: white; margin: 15% auto; padding: 25px; border-radius: 24px; width: 85%; max-width: 400px; }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); }
+        .modal-content { background: white; margin: 20% auto; padding: 20px; border-radius: 16px; width: 85%; max-width: 350px; }
 
-        .footer { text-align: center; margin-top: 20px; padding-bottom: 40px; }
-        .admin-btn { color: var(--text-muted); text-decoration: none; font-size: 12px; font-weight: 600; }
+        .footer { text-align: center; padding: 20px 0 40px; }
+        .admin-link { color: var(--text-muted); text-decoration: none; font-size: 11px; letter-spacing: 0.5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="alert-bar">☕ Please deposit cash with Admin to update status</div>
+    <div class="alert-bar">📢 PLEASE DEPOSIT MONTHLY CONTRIBUTION IN CASH TO Ms SWAPNIL</div>
 
     <div class="header">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="header-top">
             <h1>Tea Club</h1>
             <span id="currentMonth" class="month-tag">Loading...</span>
         </div>
-        <p id="costDisplay">Monthly Subscription: ₹--</p>
+        <span id="costDisplay" class="cost-label">Monthly Subscription: ₹--</span>
     </div>
 
     <div class="stats-grid">
@@ -157,58 +130,45 @@
         </div>
     </div>
 
-    <div style="margin: 0 10px 20px 10px;">
-        <button class="btn-secondary" onclick="openExpenses()">📊 View Expense History</button>
-    </div>
+    <button class="btn-history" onclick="openExpenses()">📊 VIEW EXPENSE SUMMARY</button>
 
     <div class="card">
-        <h3>Join / Renew</h3>
+        <h3>Join / Renew Entry</h3>
         <form id="subForm">
             <div class="input-group">
                 <input type="text" name="empId" placeholder="Emp ID" required>
                 <input type="text" name="empName" placeholder="Full Name" required>
             </div>
             <input type="hidden" name="action" value="ADD">
-            <button type="submit" id="subBtn">Confirm Subscription</button>
+            <button type="submit" id="subBtn">Confirm & Submit</button>
         </form>
-        <div id="msg" style="text-align:center; font-size:13px; margin-top:10px;"></div>
+        <div id="msg" style="text-align:center; font-size:12px; margin-top:10px;"></div>
     </div>
 
     <div class="card">
         <h3>Member Status</h3>
-        <div style="overflow-x:auto;">
-            <table class="status-table">
-                <thead>
-                    <tr>
-                        <th>MEMBER</th>
-                        <th>ID</th>
-                        <th style="text-align:right;">STATUS</th>
-                    </tr>
-                </thead>
-                <tbody id="memberList"></tbody>
-            </table>
-        </div>
+        <table class="status-table">
+            <tbody id="memberList"></tbody>
+        </table>
     </div>
 
     <div class="footer">
-        <a href="admin.html" class="admin-btn">🔒 INTERNAL ADMIN ACCESS</a>
+        <a href="admin.html" class="admin-link">🔒 SECURE ADMIN LOGIN</a>
     </div>
 </div>
 
 <div id="expenseModal" class="modal">
     <div class="modal-content">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h3 style="margin:0;">Expense History</h3>
-            <span style="cursor:pointer; font-weight:bold; color:var(--text-muted);" onclick="closeExpenses()">✕</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 style="margin:0; font-size:16px;">Expense History</h3>
+            <span style="cursor:pointer; font-size:18px;" onclick="closeExpenses()">✕</span>
         </div>
-        <div id="expenseDetails" style="max-height:300px; overflow-y:auto; font-size:14px;">
-            </div>
+        <div id="expenseDetails" style="max-height:250px; overflow-y:auto;"></div>
     </div>
 </div>
 
 <script>
-    // Replace with your actual Google Script URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbz96eykqmJUE15UrT2FP1LXxYMIprxdmA2rLn_mC-889BDOTCb0MtkogJmcs86bVfoAuw/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbz96eykqmJUE15UrT2FP1LXxYMIprxdmA2rLn_mC-889BDOTCb0MtkogJmcs86bVfoAuw/exec'; // MUST UPDATE THIS
     let expenseData = [];
 
     async function loadData() {
@@ -226,30 +186,21 @@
             const list = document.getElementById('memberList');
             list.innerHTML = "";
             data.members.forEach(m => {
-                const statusBadge = m.paid === 'Yes' ? 
+                const badge = m.paid === 'Yes' ? 
                     '<span class="badge badge-paid">PAID</span>' : 
                     '<span class="badge badge-pending">PENDING</span>';
-                
-                list.innerHTML += `
-                    <tr>
-                        <td><b>${m.name}</b></td>
-                        <td style="color:#64748b;">${m.id}</td>
-                        <td style="text-align:right;">${statusBadge}</td>
-                    </tr>`;
+                list.innerHTML += `<tr><td><b>${m.name}</b><br><small style="color:#94a3b8">${m.id}</small></td><td style="text-align:right;">${badge}</td></tr>`;
             });
-        } catch (e) { console.error("Error loading data", e); }
+        } catch (e) { console.error("Error:", e); }
     }
 
     function openExpenses() {
         const div = document.getElementById('expenseDetails');
-        div.innerHTML = expenseData.length ? "" : "<p>No records found.</p>";
+        div.innerHTML = expenseData.length ? "" : "<p style='font-size:12px;'>No records.</p>";
         expenseData.slice().reverse().forEach(ex => {
             div.innerHTML += `
-                <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #f1f5f9;">
-                    <div>
-                        <div style="font-weight:600;">${ex.desc}</div>
-                        <div style="font-size:11px; color:#94a3b8;">${ex.date}</div>
-                    </div>
+                <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f1f5f9; font-size:13px;">
+                    <div><b>${ex.desc}</b><br><small style="color:#94a3b8">${ex.date}</small></div>
                     <div style="color:var(--danger); font-weight:700;">-₹${ex.amt}</div>
                 </div>`;
         });
@@ -264,7 +215,7 @@
         btn.disabled = true; btn.innerText = "Processing...";
         fetch(scriptURL, { method: 'POST', body: new FormData(e.target) })
         .then(() => { 
-            document.getElementById('msg').innerHTML = "<span style='color:var(--success)'>Done! Refreshing...</span>";
+            document.getElementById('msg').innerHTML = "<span style='color:var(--success)'>Success! Refreshing...</span>";
             setTimeout(() => location.reload(), 1500);
         });
     });
