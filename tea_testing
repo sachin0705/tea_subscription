@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HRMS Tea Club Dashboard</title>
+    <style>
+        :root { --primary: #1a237e; --bg: #f0f2f5; --success: #2e7d32; --danger: #c62828; --accent: #ffeb3b; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #333; }
+        .container { max-width: 800px; margin: auto; }
+        
+        .alert-bar { background: #fff3e0; color: #ef6c00; padding: 12px; text-align: center; font-weight: bold; border-radius: 8px; margin-bottom: 15px; font-size: 13px; border: 1px solid #ffe0b2; }
+
+        .dashboard-header { 
+            background: var(--primary); color: white; padding: 20px; border-radius: 12px; 
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; 
+        }
+        
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .stat-card { background: white; padding: 15px; border-radius: 10px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 15px; }
+        h3 { margin-top: 0; font-size: 1.1rem; color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        input, button { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
+        button { background: var(--primary); color: white; border: none; font-weight: bold; cursor: pointer; }
+
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 400px; }
+        th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+        
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; display: inline-block; }
+        .badge-paid { background: #e8f5e9; color: var(--success); }
+        .badge-pending { background: #ffebee; color: var(--danger); }
+
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
+        .modal-content { background: white; margin: 15% auto; padding: 20px; border-radius: 12px; width: 90%; max-width: 450px; position: relative; }
+        
+        .admin-footer { text-align: center; margin-top: 30px; padding: 20px; border-top: 1px solid #ddd; }
+        .admin-link { color: #888; text-decoration: none; font-size: 13px; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="alert-bar">📢 PLEASE DEPOSIT MONTHLY CONTRIBUTION IN CASH TO ADMIN</div>
+
+    <div class="dashboard-header">
+        <div>
+            <h2 style="margin:0; font-size: 1.4rem;">HRMS Tea Club</h2>
+            <p id="costDisplay" style="margin: 5px 0 0 0; opacity: 0.9; font-size: 13px;">Monthly Subscription Cost: ₹0</p>
+        </div>
+        <div style="text-align: right;">
+            <div id="currentMonth" style="font-weight: bold; color: var(--accent); font-size: 14px; text-transform: uppercase;">LOADING...</div>
+        </div>
+    </div>
+
+    <div class="stats-row">
+        <div class="stat-card">
+            <small style="color: #666; font-size: 11px; text-transform: uppercase;">Total Collection</small>
+            <div id="totalColl" style="font-size: 1.2rem; font-weight: bold; color: var(--success);">₹0</div>
+        </div>
+        <div class="stat-card">
+            <small style="color: #666; font-size: 11px; text-transform: uppercase;">Net Club Funds</small>
+            <div id="netFunds" style="font-size: 1.2rem; font-weight: bold; color: var(--primary);">₹0</div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 15px;">
+        <button onclick="openExpenses()" style="background: #546e7a; width: auto; padding: 10px 20px; font-size: 13px;">📊 View Expense Summary</button>
+    </div>
+
+    <div class="card">
+        <h3>New Entry / Renew</h3>
+        <form id="subForm">
+            <div class="input-row">
+                <input type="text" name="empId" placeholder="Employee ID" required inputmode="numeric">
+                <input type="text" name="empName" placeholder="Full Name" required>
+            </div>
+            <input type="hidden" name="action" value="ADD">
+            <button type="submit" id="subBtn">Submit Subscription</button>
+        </form>
+        <div id="msg" style="text-align:center; color:var(--success); font-weight: bold; margin-top: 10px;"></div>
+    </div>
+
+    <div class="card">
+        <h3>Member Status</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>Name</th><th>ID</th><th>Status</th></tr></thead>
+                <tbody id="memberList"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="admin-footer">
+        <a href="admin.html" class="admin-link">🔒 Admin Login</a>
+    </div>
+</div>
+
+<div id="expenseModal" class="modal">
+    <div class="modal-content">
+        <span style="float:right; cursor:pointer; font-size: 20px;" onclick="closeExpenses()">&times;</span>
+        <h3 style="color: var(--danger);">Expense Records</h3>
+        <div style="max-height: 300px; overflow-y: auto;">
+            <table style="width: 100%;">
+                <tbody id="expenseDetails"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    const scriptURL = 'YOUR_WEB_APP_URL_HERE';
+    let expenseData = [];
+
+    async function loadData() {
+        try {
+            const res = await fetch(scriptURL);
+            const data = await res.json();
+            expenseData = data.expenses || [];
+            
+            // Fixed Month and Stats Display
+            document.getElementById('currentMonth').innerText = data.month || "Current Month";
+            document.getElementById('netFunds').innerText = "₹" + (data.funds || "0");
+            document.getElementById('totalColl').innerText = "₹" + (data.totalColl || "0");
+            document.getElementById('costDisplay').innerText = "Monthly Subscription Cost: ₹" + (data.cost || "0");
+            
+            const list = document.getElementById('memberList');
+            list.innerHTML = "";
+            if(!data.members || data.members.length === 0) {
+                list.innerHTML = "<tr><td colspan='3' style='text-align:center'>No active members</td></tr>";
+                return;
+            }
+            data.members.forEach(m => {
+                list.innerHTML += `<tr>
+                    <td><b>${m.name}</b></td>
+                    <td>${m.id}</td>
+                    <td><span class="badge ${m.paid === 'Yes' ? 'badge-paid' : 'badge-pending'}">${m.paid === 'Yes' ? 'PAID' : 'PENDING'}</span></td>
+                </tr>`;
+            });
+        } catch (e) { console.error(e); }
+    }
+
+    function openExpenses() {
+        const list = document.getElementById('expenseDetails');
+        list.innerHTML = expenseData.length ? "" : "<tr><td>No expenses recorded</td></tr>";
+        expenseData.reverse().forEach(ex => {
+            list.innerHTML += `<tr style="border-bottom: 1px solid #eee;">
+                <td style="font-size:12px; color:#666;">${ex.date}</td>
+                <td style="font-size:13px;">${ex.desc}</td>
+                <td style="color:var(--danger); font-weight:bold;">-₹${ex.amt}</td>
+            </tr>`;
+        });
+        document.getElementById('expenseModal').style.display = "block";
+    }
+
+    function closeExpenses() { document.getElementById('expenseModal').style.display = "none"; }
+
+    document.getElementById('subForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const btn = document.getElementById('subBtn');
+        btn.disabled = true; btn.innerText = "Processing...";
+        fetch(scriptURL, { method: 'POST', body: new FormData(e.target) })
+        .then(() => { 
+            document.getElementById('msg').innerText = "Success! Please pay cash to Admin.";
+            setTimeout(() => location.reload(), 2000);
+        });
+    });
+
+    window.onload = loadData;
+</script>
+</body>
+</html>
