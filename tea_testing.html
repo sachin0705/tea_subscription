@@ -34,13 +34,13 @@
             margin-bottom: 15px; font-size: 12px; border: 1px solid #fef3c7;
         }
 
-        /* Fixed Header - No Overlap */
+        /* Header Section */
         .header { 
             background: var(--primary); 
             color: white; 
             padding: 20px; 
             border-radius: 16px; 
-            margin-bottom: 15px; /* Added space so cards don't overlap */
+            margin-bottom: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
@@ -65,7 +65,7 @@
         .stat-card span { display: block; font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
         .stat-card b { font-size: 15px; color: var(--primary); }
 
-        /* Buttons & Cards */
+        /* Cards */
         .card { 
             background: var(--card); padding: 20px; 
             border-radius: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); 
@@ -87,10 +87,16 @@
         
         .btn-history { background: #f8fafc; color: var(--text-muted); border: 1px solid #e2e8f0; margin-bottom: 15px; font-size: 12px; }
 
-        /* Table */
-        .status-table { width: 100%; border-collapse: collapse; }
+        /* Table with requested Headings */
+        .status-table { width: 100%; border-collapse: collapse; table-layout: auto; }
+        .status-table th { 
+            text-align: left; font-size: 11px; font-weight: 700; 
+            color: var(--text-muted); text-transform: uppercase; 
+            padding: 10px 5px; border-bottom: 2px solid #f1f5f9;
+        }
         .status-table td { padding: 12px 5px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; }
+        
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; white-space: nowrap; }
         .badge-paid { background: #dcfce7; color: #166534; }
         .badge-pending { background: #fee2e2; color: #991b1b; }
 
@@ -105,7 +111,7 @@
 <body>
 
 <div class="container">
-    <div class="alert-bar">📢 PLEASE DEPOSIT MONTHLY CONTRIBUTION IN CASH TO Ms SWAPNIL</div>
+    <div class="alert-bar">📢 Deposit cash with Admin to update status</div>
 
     <div class="header">
         <div class="header-top">
@@ -148,6 +154,13 @@
     <div class="card">
         <h3>Member Status</h3>
         <table class="status-table">
+            <thead>
+                <tr>
+                    <th style="width: 20%;">ID</th>
+                    <th style="width: 50%;">NAME</th>
+                    <th style="width: 30%; text-align: right;">PAYMENT STATUS</th>
+                </tr>
+            </thead>
             <tbody id="memberList"></tbody>
         </table>
     </div>
@@ -168,7 +181,7 @@
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbz96eykqmJUE15UrT2FP1LXxYMIprxdmA2rLn_mC-889BDOTCb0MtkogJmcs86bVfoAuw/exec'; // MUST UPDATE THIS
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbz96eykqmJUE15UrT2FP1LXxYMIprxdmA2rLn_mC-889BDOTCb0MtkogJmcs86bVfoAuw/exec'; 
     let expenseData = [];
 
     async function loadData() {
@@ -189,7 +202,12 @@
                 const badge = m.paid === 'Yes' ? 
                     '<span class="badge badge-paid">PAID</span>' : 
                     '<span class="badge badge-pending">PENDING</span>';
-                list.innerHTML += `<tr><td><b>${m.name}</b><br><small style="color:#94a3b8">${m.id}</small></td><td style="text-align:right;">${badge}</td></tr>`;
+                list.innerHTML += `
+                    <tr>
+                        <td style="color:#64748b; font-weight:500;">${m.id}</td>
+                        <td><b>${m.name}</b></td>
+                        <td style="text-align:right;">${badge}</td>
+                    </tr>`;
             });
         } catch (e) { console.error("Error:", e); }
     }
