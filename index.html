@@ -6,6 +6,25 @@
     <title>HRMS Tea Club Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+
+        /* PASTE THE NEW BILL CSS HERE: */
+        .btn-bill { 
+            background: #f1f5f9; 
+            color: #475569; 
+            padding: 6px 10px; 
+            border-radius: 8px; 
+            font-size: 11px; 
+            font-weight: 600;
+            cursor: pointer; 
+            text-decoration: none; 
+            display: inline-block; 
+            margin-top: 8px;
+            border: 1px solid #e2e8f0;
+            transition: background 0.2s;
+        }
+        .btn-bill:hover {
+            background: #e2e8f0;
+        }
         :root { 
             --primary: #1e293b; 
             --accent: #3b82f6; 
@@ -213,17 +232,29 @@
     }
 
     function openExpenses() {
-        const div = document.getElementById('expenseDetails');
-        div.innerHTML = expenseData.length ? "" : "<p style='font-size:12px;'>No records.</p>";
-        expenseData.slice().reverse().forEach(ex => {
-            div.innerHTML += `
-                <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f1f5f9; font-size:13px;">
-                    <div><b>${ex.desc}</b><br><small style="color:#94a3b8">${ex.date}</small></div>
-                    <div style="color:var(--danger); font-weight:700;">-₹${ex.amt}</div>
-                </div>`;
-        });
-        document.getElementById('expenseModal').style.display = "block";
-    }
+    const div = document.getElementById('expenseDetails');
+    div.innerHTML = expenseData.length ? "" : "<p>No records.</p>";
+    
+    expenseData.slice().reverse().forEach((ex, index) => {
+        // Create the bill button only if a link is present
+        const billBtn = ex.bill ? 
+            `<a href="${ex.bill}" target="_blank" class="btn-bill">📄 View Bill</a>` : 
+            `<span style="font-size:10px; color:#cbd5e1;">No image</span>`;
+
+        div.innerHTML += `
+            <div style="padding:12px 0; border-bottom:1px solid #f1f5f9;">
+                <div style="display:flex; justify-content:space-between;">
+                    <div>
+                        <div style="font-size:13px; font-weight:600;">${ex.desc}</div>
+                        <div style="font-size:11px; color:#94a3b8;">${ex.date}</div>
+                        ${billBtn}
+                    </div>
+                    <div style="color:var(--danger); font-weight:700; font-size:14px;">-₹${ex.amt}</div>
+                </div>
+            </div>`;
+    });
+    document.getElementById('expenseModal').style.display = "block";
+}
 
     function closeExpenses() { document.getElementById('expenseModal').style.display = "none"; }
 
